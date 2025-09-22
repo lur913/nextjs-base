@@ -1,16 +1,10 @@
 # Nextjs Base
 这是一个基于 Next.js v15 的基础项目模板创建的练习项目。
 
-## Getting Started
+## 练习内容
+- 嵌套路由的实现
+- 嵌套布局
+- 动态路由段
+- 嵌套布局获取动态路由段的参数
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 

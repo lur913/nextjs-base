@@ -25,8 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-lg mx-auto p-4`}
       >
+        <div className="bg-purple-600">这是根布局</div>
         {children}
       </body>
     </html>
