@@ -25,9 +25,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased  p-4`}
       >
-        {children}
+        <main className="bg-green-400 p-4">
+          <div>根布局</div>
+          {children}
+        </main>
       </body>
     </html>
   );
