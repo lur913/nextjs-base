@@ -34,7 +34,10 @@ type User = {
 export default function ClientSwrPage() {
   const { data, error, isLoading } = useSWR<User[], ApiError>(
     "/api/data?id=1",
-    fetcher
+    fetcher,
+    {
+      errorRetryCount: 2
+    }
   );
 
   if (isLoading) return <div>SWR Loading...</div>;
