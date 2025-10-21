@@ -40,3 +40,19 @@ OK! 练习结果：
 ```
 src\app\server-orm\page.tsx
 ```
+
+2. 测试在客户端组件中请求数据的两种方法
+- 使用 react 的 `use` hook
+测试方法：
+从 server 组件获取数据；
+然后将 promise 作为 prop 传递给 client 组件
+
+还是使用这个接口的数据：
+```
+https://jsonplaceholder.typicode.com/users
+```
+练习结果路径：
+```
+src\app\client-use\page.tsx
+```
+这个示例其实还测试 suspense 流式传输的知识点
