@@ -47,12 +47,30 @@ src\app\server-orm\page.tsx
 从 server 组件获取数据；
 然后将 promise 作为 prop 传递给 client 组件
 
-还是使用这个接口的数据：
+使用数据接口实现：
 ```
-https://jsonplaceholder.typicode.com/users
+src\app\api\data\route.ts
 ```
 练习结果路径：
 ```
 src\app\client-use\page.tsx
 ```
 这个示例其实还测试 suspense 流式传输的知识点
+
+- 使用社区库如 swr 或 react query 在客户端获取数据，这里演示 swr 的用法
+这些库有自己的换成和流式传输机制
+测试方法：
+先安装 swr 这个库
+```
+pnpm add swr
+```
+测试结果：
+```
+src/app/client-swr/page.tsx
+```
+感悟：
+第一次使用 swr 这种库，感觉还是很神奇，
+感觉这个 fetcher 的包装还是很重要
+尝试阅读一下文档，看看能不能熟练的掌握
+还有就是书写接口的时候，还不能熟练的获取路由和查询参数
+不会熟练的进行ts类型转化
