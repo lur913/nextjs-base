@@ -36,4 +36,7 @@ pnpm add drizzle-orm @neondatabase/serverless
 
 pnpm add -D drizzle-kit
 ```
-
+OK! 练习结果：
+```
+src\app\server-orm\page.tsx
+```
