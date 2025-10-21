@@ -13,4 +13,21 @@ yarn dev
 pnpm dev
 # or
 bun dev
+```
 
+## 练习内容
+1. 先测试服务器组件获取数据的两种方式
+- 使用 fetch api
+使用 api 接口：
+```
+https://jsonplaceholder.typicode.com/users
+```
+练习结果路径：
+```
+src\app\server-fetch\page.tsx
+```
+
+- 使用 ORM 和 数据库
+准备事项：
+ - 集成 drizzle 和 neon 数据库
+开始操作
