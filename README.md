@@ -30,4 +30,10 @@ src\app\server-fetch\page.tsx
 - 使用 ORM 和 数据库
 准备事项：
  - 集成 drizzle 和 neon 数据库
-开始操作
+开始操作 - 安装依赖
+```
+pnpm add drizzle-orm @neondatabase/serverless
+
+pnpm add -D drizzle-kit
+```
+
