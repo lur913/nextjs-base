@@ -15,7 +15,7 @@ pnpm dev
 bun dev
 ```
 
-## 练习内容
+## Fetching Data
 1. 先测试服务器组件获取数据的两种方式
 - 使用 fetch api
 使用 api 接口：
@@ -75,3 +75,27 @@ src/app/client-swr/page.tsx
 还有就是书写接口的时候，还不能熟练的获取路由和查询参数
 不会熟练的进行ts类型转化
 > 大致浏览勒一遍 swr 的文档，使用简单，但是用好，还有点难度
+
+## Updating Data
+这里主要讲勒 - 服务器函数
+server actions - 服务器函数在一个 action 或 mutation 上下文中的别称；
+
+测试方法：
+ - 先建一个服务器组件 login；
+ - 在服务器组件内部定义 server actions；
+ - 在该组件中的form调用 server actions；
+ - 再将该 server actions 分离到单独的文件中；
+ - 再将该 form 分离到一个客户端组件中；
+ - 客户端组件中调用该 server action;
+ - 再使用 useFormStatus 和 useActionState 进行状态管理；
+
+测试结果：
+```
+src\app\login\page.tsx
+src\app\login-client\page.tsx
+src\app\login-state\page.tsx
+src\app\login-status\page.tsx
+```
+感悟：
+使用 useActionState 进行状态管理，在 server actions 中做校验，
+如果前端不做校验仅依靠后端，那么可能会变相的增加后端的压力样；
