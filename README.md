@@ -21,3 +21,7 @@ bun dev
 ```
 pnpm dlx shadcn@latest init
 ```
+安装 button 组件测试一下：
+```
+pnpm dlx shadcn@latest add button
+```
