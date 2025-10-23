@@ -13,4 +13,11 @@ yarn dev
 pnpm dev
 # or
 bun dev
+```
 
+## integrate shadcn/ui
+这个分支主要练习 shadcn/ui 的使用。
+首先是集成 shadcn:
+```
+pnpm dlx shadcn@latest init
+```
