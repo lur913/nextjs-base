@@ -25,3 +25,19 @@ pnpm dlx shadcn@latest init
 ```
 pnpm dlx shadcn@latest add button
 ```
+优化：每次安装执行上面的命令太长了，在 package.json 中添加一个 script 字段：
+```json
+{
+  "scripts": {
+    ...
+    "sc": "pnpm dlx shadcn@latest add"
+  }
+}
+```
+然后执行：
+```
+yarn sc -- button
+
+# 等效于
+pnpm dlx shadcn@latest add button
+```
