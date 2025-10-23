@@ -5,7 +5,7 @@ import { ArrowUpIcon } from "lucide-react"
 export default function TestPage() {
   return (
     <div>
-      <h1>Test Page</h1>
+      <h1>Button Page</h1>
       <div className="space-x-2">
         <div className="py-2">变体</div>
         <Button>Default</Button>
