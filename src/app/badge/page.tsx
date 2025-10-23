@@ -1,5 +1,6 @@
 import { BadgeCheckIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -34,6 +35,10 @@ export default function Page() {
           variant="outline"
         >
           20+
+        </Badge>
+
+        <Badge asChild>
+          <Link href="/">Badge</Link>
         </Badge>
       </div>
     </div>
