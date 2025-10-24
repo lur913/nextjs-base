@@ -41,3 +41,7 @@ yarn sc -- button
 # 等效于
 pnpm dlx shadcn@latest add button
 ```
+
+## 说明
+- `drawer` 要实现 https://vaul.emilkowal.ski/ 这种效果，在父容器中添加 `data-vaul-drawer-wrapper` 属性
+并在 drawer 元素上添加 `shouldScaleBackground` 属性, 就可以实现了
