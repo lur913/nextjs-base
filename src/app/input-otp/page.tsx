@@ -2,7 +2,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";  // 如果你想在提交后导航
+import { useRouter } from "next/navigation"; // 如果你想在提交后导航
 import {
   InputOTP,
   InputOTPGroup,
@@ -28,7 +28,7 @@ export default function OTPPage() {
         <InputOTP
           maxLength={6}
           value={otpValue}
-          onChange={(value) => setOtpValue(value)}
+          onChange={setOtpValue}
           className="w-full"
         >
           {/* 假设我们分两组：3 位 + 分隔 + 3 位 */}
