@@ -23,3 +23,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ### 渲染 md/mdx 的几种方式
 - 基于 md/mdx 文件作为页面路由（page.md/page.mdx）
 - 将 md/mdx 文件作为组件，在其他地方导入使用
+
+- 尝试了动态导入 `src\app\blog\[slug]\page.tsx`;
+> 只是尝试了文档中的示例，但是这个示例还有些缺陷，使用
+> `generateStaticParams` 生成 Params 时，不是动态的，而是
+> 写死的，不像 astro 框架那样，只需要配置即可。后面应该有类似的
+> 解决方案；
