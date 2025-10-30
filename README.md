@@ -31,3 +31,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 > 解决方案；
 
 - 在 `src\mdx-components.tsx` 文件中尝试了 mdx 的全局样式和组件；这个样式将影响应用中的所有 mdx 文件；
+
+- 在 `src\app\import\page.tsx` 文件中尝试 mdx 文件的局部样式；
+
+- 尝试共享局部 `src\app\mdx\layout.tsx` , 确实生效
