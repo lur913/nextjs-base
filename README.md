@@ -29,3 +29,5 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 > `generateStaticParams` 生成 Params 时，不是动态的，而是
 > 写死的，不像 astro 框架那样，只需要配置即可。后面应该有类似的
 > 解决方案；
+
+- 在 `src\mdx-components.tsx` 文件中尝试了 mdx 的全局样式和组件；这个样式将影响应用中的所有 mdx 文件；
