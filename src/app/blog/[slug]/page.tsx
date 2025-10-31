@@ -1,6 +1,13 @@
 import { CustomMDX } from "@/components/mdx";
 import { getBlogPosts, formatDate } from "@/utils/blog";
 
+export async function generateStaticParams() {
+  let posts = getBlogPosts()
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }))
+}
 
 export default async function Blog(
   {params}:{

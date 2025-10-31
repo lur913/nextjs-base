@@ -1,16 +1,21 @@
 import Link from 'next/link'
-import Image from 'next/image'
+import Image, { ImageProps } from 'next/image'
 import { MDXRemote } from 'next-mdx-remote-client/rsc'
 import { highlight } from 'sugar-high'
 import React from 'react'
 
-function Table({ data }) {
-  let headers = data.headers.map((header, index) => (
+interface TableData {
+  headers: string[];
+  rows: string[][];
+}
+
+function Table({ data }: { data: TableData }) {
+  let headers = data.headers.map((header: string, index: number) => (
     <th key={index}>{header}</th>
   ))
-  let rows = data.rows.map((row, index) => (
+  let rows = data.rows.map((row: string[], index: number) => (
     <tr key={index}>
-      {row.map((cell, cellIndex) => (
+      {row.map((cell: string, cellIndex: number) => (
         <td key={cellIndex}>{cell}</td>
       ))}
     </tr>
@@ -48,16 +53,20 @@ function CustomLink(props: CustomLinkProps){
   return <a target="_blank" rel="noopener noreferrer" {...props} />
 }
 
-function RoundedImage(props) {
-  return <Image alt={props.alt} className="rounded-lg" {...props} />
+function RoundedImage(props: ImageProps) {
+  return <Image className="rounded-lg" {...props} />
 }
 
-function Code({ children, ...props }) {
+interface CodeProps extends React.HTMLAttributes<HTMLElement> {
+  children: string;
+}
+
+function Code({ children, ...props }: CodeProps) {
   let codeHTML = highlight(children)
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
 }
 
-function slugify(str) {
+function slugify(str: string): string {
   return str
     .toString()
     .toLowerCase()
@@ -68,9 +77,13 @@ function slugify(str) {
     .replace(/\-\-+/g, '-') // Replace multiple - with single -
 }
 
-function createHeading(level) {
-  const Heading = ({ children }) => {
-    let slug = slugify(children)
+interface HeadingProps {
+  children: React.ReactNode;
+}
+
+function createHeading(level: number) {
+  const Heading = ({ children }: HeadingProps) => {
+    let slug = slugify(children as string)
     return React.createElement(
       `h${level}`,
       { id: slug },
@@ -103,7 +116,17 @@ let components = {
   Table,
 }
 
-export function CustomMDX(props) {
+interface CustomMDXProps {
+  source: any;
+  options?: any;
+  components?: {
+    [key: string]: React.ComponentType<any>;
+  };
+  onError?: React.ComponentType<any>;
+  [key: string]: any;
+}
+
+export function CustomMDX(props: CustomMDXProps) {
   return (
     <MDXRemote
       {...props}
