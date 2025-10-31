@@ -37,3 +37,5 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - 尝试共享局部 `src\app\mdx\layout.tsx` , 确实生效
 - 尝试共享布局和 `@tailwindcss/typography` 插件一起使用；
 - 尝试在 mdx 中导出 metadata 元数据；
+
+研究一下官方的 blog 项目，看看是如何实现的，来浮现一个
