@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
+import { exampleAction } from '@/actions/index';
 
 import { Button } from "@/components/ui/button"
 import {
@@ -75,6 +76,7 @@ export default function BugReportForm() {
         "--border-radius": "calc(var(--radius)  + 4px)",
       } as React.CSSProperties,
     })
+    exampleAction(data as any)
   }
 
   return (
