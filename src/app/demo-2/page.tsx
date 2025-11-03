@@ -33,14 +33,14 @@ const Page = () => {
         className="border border-gray-200 p-4 rounded"
         placeholder="name"
       />
-      {errors.name?.message && <p>{errors.name?.message}</p>}
+      {errors.name?.message && <p className="text-rose-400">{errors.name?.message}</p>}
       <input
         {...register("age", { valueAsNumber: true })}
         type="number"
         placeholder="age"
         className="border border-gray-200 p-4 rounded"
       />
-      {errors.age?.message && <p>{errors.age?.message}</p>}
+      {errors.age?.message && <p className="text-rose-400">{errors.age?.message}</p>}
       <input
         type="submit"
         className="flex-1 bg-pink-500 rounded p-4 text-white font-bold"
