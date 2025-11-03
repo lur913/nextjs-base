@@ -1,5 +1,13 @@
 "use client"
 
+/**
+ * 使用 react-hook-form 和 Field 来做表单的完整示例
+ * 用到的主要技术点：
+ * - react-hook-form 来做表单状态管理和校验
+ * - zod 来做表单校验
+ * - Field 组件来做表单元素的渲染
+ */
+
 import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
@@ -55,7 +63,7 @@ export default function BugReportForm() {
   function onSubmit(data: Schema) {
     toast("您提交了以下内容：", {
       description: (
-        <pre className="bg-code text-code-background mt-2 w-[320px] overflow-x-auto rounded-md p-4">
+        <pre className=" mt-2 w-[320px] overflow-x-auto rounded-md p-4">
           <code>{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
@@ -92,7 +100,7 @@ export default function BugReportForm() {
                     {...field}
                     id="form-rhf-demo-title"
                     aria-invalid={fieldState.invalid}
-                    placeholder="Login button not working on mobile"
+                    placeholder="登录按钮在手机上不生效"
                     autoComplete="off"
                   />
                   {fieldState.invalid && (
@@ -113,7 +121,7 @@ export default function BugReportForm() {
                     <InputGroupTextarea
                       {...field}
                       id="form-rhf-demo-description"
-                      placeholder="I'm having an issue with the login button on mobile."
+                      placeholder="我有一个在手机上登录按钮的问题"
                       rows={6}
                       className="min-h-24 resize-none"
                       aria-invalid={fieldState.invalid}
