@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getUsers } from "@/server/user";
-import { UserSelect} from '@/db/schema';
+import { UserSelect } from "@/db/schema";
 
 import {
   Table,
@@ -11,15 +11,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus } from "lucide-react";
+
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { UserAddForm } from "@/components/forms/user-add-form";
 
 export default async function Page() {
   const allUsers = (await getUsers()) as UserSelect[];
-  console.log(111, allUsers);
   return (
     <div className="py-4">
       <div className="py-4 flex justify-end">
-        <Button variant="default">Add <Plus /></Button>
+        <UserAddForm/>
       </div>
       <Table>
         <TableCaption>A list of users in system..</TableCaption>
@@ -32,12 +41,14 @@ export default async function Page() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {allUsers.map((user) => (
+          {allUsers?.map((user) => (
             <TableRow key={user.id}>
-              <TableCell className="font-medium">{ user.username}</TableCell>
+              <TableCell className="font-medium">{user.username}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.createdAt.toLocaleString()}</TableCell>
-              <TableCell className="text-right">{user.updatedAt.toLocaleString()}</TableCell>
+              <TableCell className="text-right">
+                {user.updatedAt.toLocaleString()}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

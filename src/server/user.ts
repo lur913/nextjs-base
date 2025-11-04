@@ -10,3 +10,11 @@ export async function getUsers() {
     return error
   }
 }
+
+export async function createUser(user: UserInsert) {
+  try {
+    await db.insert(users).values(user)
+  }catch (error) {
+    console.log(error);
+  }
+}
