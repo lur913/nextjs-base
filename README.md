@@ -24,3 +24,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ```
 src\app\react-hook-form\page.tsx
 ```
+
+- react-hook-form 和 server actions 的最佳实践：
+```
+src\app\rhf-sa\page.tsx
+```
