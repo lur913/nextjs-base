@@ -17,3 +17,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## CURD
 1. 集成 shadcn/ui;
 2. 集成 dark mode;
+3. 集成 drizzle + neon;
