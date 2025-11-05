@@ -5,11 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { createUser } from "@/server/user";
+import { createUser, updateUser } from "@/server/user";
 import { useRouter } from "next/navigation";
+import { UserSelect } from "@/db/schema";
 
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 
 import {
   Field,
@@ -41,40 +41,39 @@ const formSchema = z.object({
   email: z.email("Please enter a valid email address."),
 });
 
-export function UserAddForm() {
+export function UserAddForm(
+  {
+    children,
+    record
+  } : {
+    children: React.ReactNode;
+    record?: UserSelect
+  }
+) {
   const [isPending, startTransition] = React.useTransition();
   const [isOpen, setIsOpen] = React.useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      email: "",
+      username: record?.username || "",
+      email: record?.email || "",
     },
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    // toast("You submitted the following values:", {
-    //   description: (
-    //     <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-    //       <code>{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    //   position: "bottom-right",
-    //   classNames: {
-    //     content: "flex flex-col gap-2",
-    //   },
-    //   style: {
-    //     "--border-radius": "calc(var(--radius)  + 4px)",
-    //   } as React.CSSProperties,
-    // });
     const users = {
       ...data,
       password: "password123",
     };
     startTransition(async () => {
       try {
+        record ? 
+        await updateUser(record.id, data) :
         await createUser(users);
+
+        record ?
+        toast.success("User updated successfully") :
         toast.success("User created successfully");
         form.reset();
         router.refresh();
@@ -88,9 +87,7 @@ export function UserAddForm() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="default">
-          Add <Plus />
-        </Button>
+        {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
