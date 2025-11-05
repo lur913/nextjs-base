@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   AlertDialog,
@@ -10,39 +10,35 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import { Trash2 } from "lucide-react"
-import { useTransition } from 'react';
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { useTransition } from "react";
 
-import { deleteUser } from '@/server/user';
+import { deleteUser } from "@/server/user";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 
-export function UserDeleteForm({
-  id
-} : {
-  id: string
-}) {
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+export function UserDeleteForm({ id }: { id: string }) {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   function handleDelete() {
-    startTransition(async() => {
+    startTransition(async () => {
       try {
-        await deleteUser(id)
-        toast.success('User deleted successfully')
-        router.refresh()
+        await deleteUser(id);
+        toast.success("User deleted successfully");
+        router.refresh();
       } catch (error) {
-        toast.error('Error deleting user')
+        toast.error("Error deleting user");
       }
-    })
+    });
   }
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="ghost">
-          <Trash2/>
+          <Trash2 />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -55,14 +51,16 @@ export function UserDeleteForm({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          {/* <AlertDialogAction asChild>
-            <Button onClick={handleDelete} variant="destructive">Continue</Button>
-          </AlertDialogAction> */}
+          <AlertDialogAction asChild>
             <Button onClick={handleDelete} variant="destructive">
-              {isPending ? <Spinner /> : 'Continue'}
+              {isPending ? <Spinner /> : "Continue"}
             </Button>
+          </AlertDialogAction>
+          {/* <Button onClick={handleDelete} variant="destructive">
+              {isPending ? <Spinner /> : 'Continue'}
+            </Button> */}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

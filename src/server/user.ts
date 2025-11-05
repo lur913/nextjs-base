@@ -17,6 +17,7 @@ export async function getUsers() {
 export async function createUser(user: UserInsert) {
   try {
     await db.insert(users).values(user);
+    revalidatePath('/')
   } catch (error) {
     console.log(error);
   }
@@ -37,6 +38,7 @@ export async function updateUser(
 export async function deleteUser(id: string) {
   try {
     await db.delete(users).where(eq(users.id, id));
+    revalidatePath('/')
   } catch (error) {
     console.log(error);
   }
