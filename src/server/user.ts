@@ -5,9 +5,10 @@ import { UserInsert, UserSelect, users } from '@/db/schema'
 
 export async function getUsers() {
   try {
-    return await db.select().from(users)
-  } catch (error) {
-    return error
+    const res =  await db.select().from(users)
+    return {ok: true, data: res}
+  } catch (error: any) {
+    return {ok: false, error: error.message ?? 'Unknown error'}
   }
 }
 
