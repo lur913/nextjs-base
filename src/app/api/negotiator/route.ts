@@ -8,6 +8,7 @@ export async function GET(req: Request) {
 
   // 有效的语言
   const availableLang = ['en', 'zh-CN']
+  // 返回最优的语言
   const lang = negotiator.language(availableLang)
   console.log(1111, lang);
   const body = lang === 'en' ? 'Hello World' : '你好，世界'
