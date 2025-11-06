@@ -27,6 +27,13 @@ src\app\api\negotiator\route.ts
 - @formatjs/intl-localematcher —— 负责 “把浏览器想要的语言数组 和 我本地支持的语种数组 做一次最优质匹配”
 - 两件事拆开做，代码会更短、更准，还能直接返回 BCP 47 语言标签（en-US、zh-CN…），方便扔进 next-i18n-router、next-intl 等生态库。
 
+以上是不借助成熟的 i18n 库的手动配置；
+下面使用比较主流的 i18n 库 `next-intl` 来实现自动配置,
+首先安装依赖：
+```
+pnpm add next-intl
+```
+
 
 
 
