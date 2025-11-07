@@ -12,6 +12,7 @@ export default function Page() {
   console.log(1111, metadata);
   return (
     <div className="p-4">
+      <h1>啊撒砥砺奋进啊</h1>
       <div>这是个普通的文件路由页面，下面是导入的 mdx 内容</div>
       <div className="border rounded-2xl p-4">
         <Welcome components={overrideComponents}/>

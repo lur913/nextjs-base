@@ -10,3 +10,38 @@ import MyComponent from '@/components/MyComponent';
 # Welcome to my MDX page!
 使用 import 语法导入 MDX 文件来使用 MDX ；
 <MyComponent />
+
+```jsx
+export default function Page() {
+  console.log(1111, metadata);
+  return (
+    <div className="p-4">
+      <h1>啊撒砥砺奋进啊</h1>
+      <div>这是个普通的文件路由页面，下面是导入的 mdx 内容</div>
+      <div className="border rounded-2xl p-4">
+        <Welcome components={overrideComponents}/>
+      </div>
+    </div>
+  );
+}
+```
+asdfasdf
+```jsx
+import Welcome from '@/markdown/welcome.mdx'
+ 
+function CustomH1({ children }) {
+  return <h1 style={{ color: 'blue', fontSize: '100px' }}>{children}</h1>
+}
+ 
+const overrideComponents = {
+  h1: CustomH1,
+}
+ 
+export default function Page() {
+  return <Welcome components={overrideComponents} />
+}
+```
+
+<Alert>
+  这是一个警告框
+</Alert>
