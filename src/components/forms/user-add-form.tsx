@@ -54,13 +54,22 @@ export function UserAddForm(
   const [isOpen, setIsOpen] = React.useState(false);
   const router = useRouter();
 
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: record?.username || "",
-      email: record?.email || "",
+      username:"",
+      email: "",
     },
   });
+
+  // 根据 record 来反显表格
+  React.useEffect(() => {
+    form.reset({
+      username: record?.username || "",
+      email: record?.email || "",
+    })
+  }, [record]);
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     const users = {
@@ -69,6 +78,7 @@ export function UserAddForm(
     };
     startTransition(async () => {
       try {
+        console.log(111, record);
         record ? 
         await updateUser(record.id, data) :
         await createUser(users);
