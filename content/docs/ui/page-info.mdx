@@ -1,0 +1,122 @@
+---
+title: "UI Index 页面元数据信息"
+description: "从开发服务器控制台获取的 ui-index 完整元数据详细信息"
+---
+
+# UI Index 页面元数据信息
+
+本文档记录了从 Next.js 开发服务器控制台输出的 `ui-index` 完整元数据信息。
+
+## 原始数据结构
+
+```javascript
+ui-index: {
+  absolutePath: 'content\\docs\\ui\\ui-index.mdx',
+  path: 'ui/ui-index.mdx',
+  url: '/docs/ui/ui-index',
+  slugs: [ 'ui', 'ui-index' ],
+  data: {
+    body: [Function: MDXContent],
+    toc: [ [Object], [Object], [Object], [Object], [Object], [Object] ],
+    structuredData: { contents: [Array], headings: [Array] },
+    _exports: Object [Module] {
+      _markdown: [Getter],
+      default: [Getter],
+      frontmatter: [Getter],
+      structuredData: [Getter],
+      toc: [Getter]
+    },
+    extractedReferences: undefined,
+    title: 'UI Index',
+    description: 'this is ui page mdx',
+    info: {
+      path: 'ui/ui-index.mdx',
+      fullPath: 'content\\docs\\ui\\ui-index.mdx'
+    },
+    getText: [AsyncFunction: getText],
+    getMDAST: [AsyncFunction: getMDAST]
+  },
+  locale: ''
+}
+```
+
+## 详细解析
+
+### 基本路径信息
+
+- **绝对路径**: `content\docs\ui\ui-index.mdx`
+- **相对路径**: `ui/ui-index.mdx`
+- **访问URL**: `/docs/ui/ui-index`
+- **路由段**: `['ui', 'ui-index']`
+- **语言环境**: 默认(空字符串)
+
+### 数据对象 (data)
+
+#### 内容相关
+- **body**: MDX内容组件函数
+  - 类型: `Function`
+  - 用途: 渲染MDX内容的React组件
+
+#### 目录结构 (toc)
+- **toc**: 目录数据数组
+  - 包含6个标题对象
+  - 用于生成页面目录导航
+
+#### 结构化数据 (structuredData)
+- **contents**: 内容数组
+- **headings**: 标题数组
+  - 用于SEO和页面结构分析
+
+#### 模块导出 (_exports)
+```javascript
+_exports: {
+  _markdown: [Getter],
+  default: [Getter],
+  frontmatter: [Getter],
+  structuredData: [Getter],
+  toc: [Getter]
+}
+```
+
+#### 元数据
+- **title**: "UI Index"
+- **description**: "this is ui page mdx"
+- **extractedReferences**: 未定义的引用提取
+
+#### 文件信息 (info)
+```javascript
+info: {
+  path: 'ui/ui-index.mdx',
+  fullPath: 'content\\docs\\ui\\ui-index.mdx'
+}
+```
+
+#### 处理函数
+- **getText**: 异步函数，获取原始文本内容
+- **getMDAST**: 异步函数，获取MDAST语法树
+
+## 系统集成状态
+
+✅ **MDX解析**: 成功
+✅ **元数据提取**: 完整
+✅ **目录生成**: 正常
+✅ **结构化数据**: 可用
+✅ **模块导出**: 完整
+
+## 技术细节
+
+- **框架**: Next.js 16.0.1 + Fumadocs MDX
+- **解析器**: 支持MDX语法和frontmatter
+- **性能**: 热重载缓存已启用
+- **本地化**: 支持多语言(当前为默认)
+
+## 注意事项
+
+1. 虽然元数据解析完整，但访问 `/docs/ui/ui-index` 返回404错误
+2. 可能需要检查路由配置或页面映射
+3. MDX文件内容本身可能存在语法问题
+4. 建议验证fumadocs配置文件中的路径映射
+
+---
+
+*最后更新: 2025-11-20*

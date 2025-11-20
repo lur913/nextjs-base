@@ -1,0 +1,52 @@
+---
+title: UI Index
+description: this is ui page mdx
+---
+
+## 简介
+本节介绍项目中的 UI 组件库和设计规范。该页面用于汇总可复用的界面组件、使用示例与设计注意事项，便于开发者快速查阅与上手。
+
+## 设计原则
+- 一致性：统一的配色、间距与排版规则。
+- 可访问性：保证键盘操作与语义化 HTML，支持屏幕阅读器。
+- 响应式：所有组件在不同屏幕下表现良好。
+- 可定制：样式与主题可通过变量覆盖。
+
+## 可用组件
+- Button：按钮（主要/次要/文本）
+- Input：文本输入框、密码框、文本域
+- Select：下拉选择
+- Modal：弹窗组件
+- Card：卡片容器
+- Grid / Layout：栅格与布局工具
+- Typography：标题、段落、列表样式
+
+## 快速示例
+下面是一个简单的示例，展示如何在页面中使用 `Button` 与 `Modal`（示例为伪代码，具体导入路径请根据项目调整）：
+
+```tsx
+import { Button, Modal } from 'src/ui'
+
+export default function Example() {
+	const [open, setOpen] = React.useState(false)
+	return (
+		<>
+			<Button onClick={() => setOpen(true)}>打开弹窗</Button>
+			<Modal open={open} onClose={() => setOpen(false)}>
+				<h2>示例弹窗</h2>
+				<p>这是一个演示内容。</p>
+				<Button onClick={() => setOpen(false)}>关闭</Button>
+			</Modal>
+		</>
+	)
+}
+```
+
+## 使用方法
+- 在需要的页面或组件中导入所需组件。
+- 参照设计规范设置主题变量与间距。
+- 若需要自定义样式，优先通过覆盖主题变量实现，避免直接修改组件内部样式。
+
+## 贡献与反馈
+- 若你想新增组件或改进现有组件，请提交 PR，并在 PR 描述中包含使用示例与设计 rationale。
+- 发现 bug 或可访问性问题，请在 issue 中描述复现步骤与预期行为。
