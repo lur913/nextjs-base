@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 const routes = [
+  { path: "/react-hook-form", name: "react-hook-form" },
   { path: "/combobox", name: "Combobox 组合框" },
   { path: "/select-box", name: "Select Box 下拉搜索选择框" },
   { path: "/accordion", name: "Accordion 手风琴" },
