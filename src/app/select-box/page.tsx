@@ -1,201 +1,128 @@
-'use client'
+"use client";
 
-import { CheckIcon, ChevronUp, X } from "lucide-react";
-import { useState } from "react";
-import { cn } from '@/lib/utils'
+import * as React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
+
+import { Button } from "@/components/ui/button";
+// import {
+//   Card,
+//   CardContent,
+//   CardDescription,
+//   CardFooter,
+//   CardHeader,
+//   CardTitle,
+// } from "@/components/ui/card";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
-import { ScrollArea } from "@/components/ui/scroll-area"
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroupTextarea,
+} from "@/components/ui/input-group";
 
-interface Option {
-  id: string | number;
-  name: string;
-}
+import { Select } from '@/components/select-box';
 
-export default function Page() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [value, setValue] = useState<string | number | (string | number)[]>("");
-  const multiple = true;
+const formSchema = z.object({
+  title: z
+    .string()
+    .min(5, "Bug title must be at least 5 characters.")
+    .max(32, "Bug title must be at most 32 characters."),
+  description: z
+    .string()
+    .min(20, "Description must be at least 20 characters.")
+    .max(100, "Description must be at most 100 characters."),
+  tags: z.array(z.union([z.string(), z.number()])).min(1, '至少选择一个标签')
+});
 
-  const options: Option[] = [
-    {
-      id: 123324,
-      name: '测试选项'
+export default function BugReportForm() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      tags: []
     },
-    {
-      id: 123325,
-      name: '选项二'
-    },
-    {
-      id: 123326,
-      name: '选项三'
-    }
-  ];
+  });
 
-  const handleSelect = (selectedValue: string | number) => {
-    if (multiple) {
-      const currentValue = value as (string | number)[];
-      const newValue = currentValue?.includes(selectedValue)
-        ? currentValue.filter((v) => v !== selectedValue)
-        : [...(currentValue ?? []), selectedValue];
-      setValue(newValue);
-    } else {
-      setValue(selectedValue);
-      setIsOpen(false);
-    }
-  };
-
-  const handleClear = () => {
-    setValue(multiple ? [] : "");
-  };
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    console.log(1113, data);
+  }
 
   return (
-    <div>
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild>
-          <div
-            className={
-              "flex min-h-[36px] cursor-pointer items-center justify-between rounded-md border px-3 py-1 data-[state=open]:border-ring"
-            }
-          >
-            <div
-              className={cn(
-                "items-center gap-1 overflow-hidden text-sm",
-                multiple
-                  ? "flex flex-grow flex-wrap "
-                  : "inline-flex whitespace-nowrap"
-              )}
-            >
-              {(multiple && Array.isArray(value) && value.length > 0) || (!multiple && value) ? (
-                multiple ? (
-                  (options || [])
-                    .filter(
-                      (option) =>
-                        Array.isArray(value) && value.includes(option.id)
-                    )
-                    .map((option) => (
-                      <span
-                        key={option.id}
-                        className="inline-flex items-center gap-1 rounded-md border py-0.5 pl-2 pr-1 text-xs font-medium text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                      >
-                        <span>{option.name}</span>
-                        <span
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleSelect(option.id);
-                          }}
-                          className="flex items-center rounded-sm px-[1px] text-muted-foreground/60 hover:bg-accent hover:text-muted-foreground"
-                        >
-                          <X />
-                        </span>
-                      </span>
-                    ))
-                ) : (
-                  (options || []).find((opt) => opt.id === value)?.name
-                )
-              ) : (
-                <span className="mr-auto text-muted-foreground">Select...</span>
-              )}
-            </div>
-            <div className="flex items-center self-stretch pl-1 text-muted-foreground/60 hover:text-foreground [&>div]:flex [&>div]:items-center [&>div]:self-stretch">
-              {(multiple && Array.isArray(value) && value.length > 0) || (!multiple && value) ? (
-                <div
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleClear();
-                  }}
-                >
-                  <X className="size-4" />
-                </div>
-              ) : (
-                <div>
-                  <ChevronUp className="size-4" />
-                </div>
-              )}
-            </div>
-          </div>
-        </PopoverTrigger>
-        <PopoverContent
-          className="w-[var(--radix-popover-trigger-width)] p-0"
-          align="start"
-        >
-          <Command>
-            <div className="relative">
-              <CommandInput
-                value={searchTerm}
-                onValueChange={(e) => setSearchTerm(e)}
-                placeholder="Search..."
-                className="h-9"
+    <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
+      <FieldGroup>
+        <Controller
+          name="title"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="form-rhf-demo-title">Bug Title</FieldLabel>
+              <Input
+                {...field}
+                id="form-rhf-demo-title"
+                aria-invalid={fieldState.invalid}
+                placeholder="Login button not working on mobile"
+                autoComplete="off"
               />
-              {searchTerm && (
-                <div
-                  className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-muted-foreground hover:text-foreground"
-                  onClick={() => setSearchTerm("")}
-                >
-                  <X className="size-4" />
-                </div>
-              )}
-            </div>
-            <CommandList>
-              <CommandEmpty>{"No results found."}</CommandEmpty>
-              <CommandGroup>
-                <ScrollArea>
-                  <div className="max-h-64">
-                    {(options || []).map((option) => {
-                      const isSelected =
-                        Array.isArray(value) && value.includes(option.id);
-                      return (
-                        <CommandItem
-                          key={option.id}
-                          onSelect={() =>
-                            handleSelect(option.id)
-                          }
-                        >
-                          {multiple && (
-                            <div
-                              className={cn(
-                                "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                                isSelected
-                                  ? "bg-primary text-primary-foreground"
-                                  : "opacity-50 [&_svg]:invisible"
-                              )}
-                            >
-                              <CheckIcon />
-                            </div>
-                          )}
-                          <span>{option.name}</span>
-                          {!multiple && option.id === value && (
-                            <CheckIcon
-                              className={cn(
-                                "ml-auto",
-                                option.id === value
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                          )}
-                        </CommandItem>
-                      );
-                    })}
-                  </div>
-                </ScrollArea>
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </div>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+        <Controller
+          name="description"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="form-rhf-demo-description">
+                Description
+              </FieldLabel>
+              <InputGroup>
+                <InputGroupTextarea
+                  {...field}
+                  id="form-rhf-demo-description"
+                  placeholder="I'm having an issue with the login button on mobile."
+                  rows={6}
+                  className="min-h-24 resize-none"
+                  aria-invalid={fieldState.invalid}
+                />
+                <InputGroupAddon align="block-end">
+                  <InputGroupText className="tabular-nums">
+                    {field.value.length}/100 characters
+                  </InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
+              <FieldDescription>
+                Include steps to reproduce, expected behavior, and what actually
+                happened.
+              </FieldDescription>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+        {/* 封装的 select */}
+        <Select control={form.control}/>
+
+      </FieldGroup>
+      <FieldGroup className="py-4">
+        <Field orientation="horizontal">
+          <Button type="button" variant="outline" onClick={() => form.reset()}>
+            Reset
+          </Button>
+          <Button type="submit" form="form-rhf-demo">
+            Submit
+          </Button>
+        </Field>
+      </FieldGroup>
+    </form>
   );
 }
