@@ -1,14 +1,10 @@
-import BaseForm from "@/components/base";
+import { GetStarted } from "@/components/react-hook-form/get-started";
 
 
-export default function Home() {
-
+export default function Page() {
   return (
     <div>
-      <h1 className="text-2xl font-bold uppercase text-rose-600 underline py-4">
-        React-Hook-form
-      </h1>
-      <BaseForm />
+      <GetStarted/>
     </div>
   );
 }
