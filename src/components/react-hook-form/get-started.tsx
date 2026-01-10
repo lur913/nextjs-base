@@ -2,8 +2,11 @@
 
 import { Span } from "next/dist/trace";
 import { useEffect, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, useController, UseControllerProps } from "react-hook-form";
 import ValueDemo from "./value-demo";
+import * as z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { BasicConditionalForm } from "./conditional-form";
 
 // 输入类型
 type Inputs = {
@@ -19,7 +22,223 @@ const inputClass = "block border border-gray-50 py-2 px-4 rounded";
  * @returns React.ReactNode
  */
 export function GetStarted() {
-  return <ValidRequired />;
+  return <BasicConditionalForm />;
+}
+
+// 10. 使用 schema 校验
+const formSchema = z.object({
+  name: z.string().min(1, "name 不能为空"),
+  age: z.number().min(1, 'age 不能为空')
+})
+
+type FormSchema = z.infer<typeof formSchema>
+
+function WithSchemaValid() {
+  const {register, handleSubmit, formState: { errors }} = useForm<FormSchema>({
+    resolver: zodResolver(formSchema)
+  })
+
+  const onSubmit = (data: FormSchema) => {
+    console.log(`onSubmit: `, data);
+  }
+  console.log(111, errors);
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <input {...register("name")}  className={inputClass}/>
+      <p>{errors.name?.message}</p>
+
+      <input {...register("age", {valueAsNumber: true})}  className={inputClass}/>
+      <p>{errors.age?.message}</p>
+
+      <input type="submit" className={inputClass}/>
+    </form>
+  )
+}
+
+// 9. 错误处理
+type HProp = {
+  firstName: string 
+  mail: string
+}
+function HandleError() {
+  
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<HProp>()
+  const onSubmit: SubmitHandler<HProp> = (data) => console.log(data)
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <input
+        className={inputClass}
+        {...register("firstName", { required: true })}
+        aria-invalid={errors.firstName ? "true" : "false"}
+      />
+      {errors.firstName?.type === "required" && (
+        <p role="alert">First name is required</p>
+      )}
+
+      <input
+        className={inputClass}
+        {...register("mail", { required: "Email Address is required" })}
+        aria-invalid={errors.mail ? "true" : "false"}
+      />
+      {errors.mail && <p role="alert">{errors.mail.message}</p>}
+
+      <input type="submit" className={inputClass}/>
+    </form>
+  )
+}
+
+// 8. 测试受控 input 的 hooks api
+type FormValues = {
+  FirstName: string
+}
+
+function Input(props: UseControllerProps<FormValues>) {
+  const { field, fieldState } = useController(props)
+  console.log(123, props);
+  return (
+    <div className="space-y-3">
+      <input {...field} placeholder={props.name} className={inputClass}/>
+      <p>{fieldState.isTouched && "Touched"}</p>
+      <p>{fieldState.isDirty && "Dirty"}</p>
+      <p>{fieldState.invalid ? "invalid" : "valid"}</p>
+    </div>
+  )
+}
+
+function ControlledHookAPI() {
+  const { handleSubmit, control } = useForm<FormValues>({
+    defaultValues: {
+      FirstName: "",
+    },
+    mode: "onChange",
+  })
+  const onSubmit = (data: FormValues) => console.log(data)
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <Input control={control} name="FirstName" rules={{ required: true }} />
+      <input type="submit"  className={inputClass}/>
+    </form>
+  )
+}
+
+
+// 7. 测试多种类型的表单 - 包含输入框，选择框，多选，单选
+function MutipForm() {
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      category: "",
+      checkbox: [],
+      radio: "",
+    },
+  });
+
+  return (
+    <form onSubmit={handleSubmit(console.log)} className="space-y-4">
+      <input
+        className={inputClass}
+        {...register("firstName", { required: true })}
+        placeholder="First name"
+      />
+
+      <input
+        className={inputClass}
+        {...register("lastName", { minLength: 2 })}
+        placeholder="Last name"
+      />
+
+      <select {...register("category")} className={inputClass}>
+        <option value="">Select...</option>
+        <option value="A">Category A</option>
+        <option value="B">Category B</option>
+      </select>
+
+      <label className="flex gap-2">
+        <input
+          className={inputClass}
+          {...register("checkbox")}
+          type="checkbox"
+          value="B"
+        />
+        <span>A</span>
+      </label>
+      <input
+        className={inputClass}
+        {...register("checkbox")}
+        type="checkbox"
+        value="C"
+      />
+
+      <input
+        className={inputClass}
+        {...register("radio")}
+        type="radio"
+        value="A"
+      />
+      <input
+        className={inputClass}
+        {...register("radio")}
+        type="radio"
+        value="B"
+      />
+      <input
+        className={inputClass}
+        {...register("radio")}
+        type="radio"
+        value="C"
+      />
+
+      <input className={inputClass} type="submit" />
+    </form>
+  );
+}
+
+// 6. 测试一下嵌套值的情况
+type IProps = {
+  name: {
+    firstName: string;
+    lastName: string[];
+  };
+};
+/**
+ * 确实可以这样嵌套绑定
+ */
+function NestedValue() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IProps>();
+  const onSubmit: SubmitHandler<IProps> = (data) => {
+    console.log(`onSubmit: `, data);
+  };
+
+  console.log(111, errors);
+
+  return (
+    <>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <input
+          {...register("name.firstName", { required: "firstName 不能为空" })}
+          className={inputClass}
+        />
+        {errors.name?.firstName && <p>{errors.name.firstName.message}</p>}
+        <input
+          {...register("name.lastName.0", { required: "lastName 不能为空" })}
+          className={inputClass}
+        />
+        {errors.name?.lastName?.[0] && <p>{errors.name.lastName[0].message}</p>}
+        <input type="submit" className={inputClass} />
+      </form>
+    </>
+  );
 }
 
 // 5. 测试校验选项 - validate
@@ -157,7 +376,10 @@ function ValidRequired() {
           required: true,
           onChange: (e) => {
             const rawValue = e.target.value.replace(/\D/g, "");
-            const formatted = rawValue.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+            const formatted = rawValue.replace(
+              /(\d{3})(\d{4})(\d{4})/,
+              "$1-$2-$3"
+            );
             setValue("tel", formatted);
           },
           // pattern: {
