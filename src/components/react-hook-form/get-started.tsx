@@ -1,12 +1,22 @@
 "use client";
 
 import { Span } from "next/dist/trace";
-import { useEffect, useState } from "react";
-import { useForm, SubmitHandler, useController, UseControllerProps } from "react-hook-form";
+import { useEffect, useState, useRef } from "react";
+import {
+  useForm,
+  SubmitHandler,
+  useController,
+  useFieldArray,
+  UseControllerProps,
+  Control,
+  useWatch,
+  Path,
+} from "react-hook-form";
 import ValueDemo from "./value-demo";
-import * as z from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { BasicConditionalForm } from "./conditional-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Conditional from "./conditional-form";
+import WatchUser from './watch-user'
 
 // 输入类型
 type Inputs = {
@@ -22,52 +32,221 @@ const inputClass = "block border border-gray-50 py-2 px-4 rounded";
  * @returns React.ReactNode
  */
 export function GetStarted() {
-  return <BasicConditionalForm />;
+  return <Conditional />;
+}
+
+// 12. 动态表单中使用监听
+
+type FieldProps = {
+  name: string
+  age: number
+  test: {
+    firstName: string;
+    lastName: string;
+  }[];
+};
+
+function FieldArray() {
+  const { register, control, handleSubmit, watch } = useForm<FieldProps>();
+  const { fields, remove, append } = useFieldArray({ name: "test", control });
+
+  // 使用 useRef 统计渲染次数，不会触发额外的渲染
+  const renderCountRef = useRef(0);
+  renderCountRef.current += 1;
+
+  const onSubmit = (data: FieldProps) => {
+    console.log("表单提交:", data);
+    console.log("当前 watch 值:", watch("test"));
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="p-4 text-black bg-gray-100 rounded">
+        <p>
+          组件渲染次数: <strong>{renderCountRef.current}</strong>
+        </p>
+      </div>
+
+      <input {...register("name")} className={inputClass} />
+      <input
+        {...register("age", { valueAsNumber: true })}
+        className={inputClass}
+      />
+
+      {fields.map((field, index) => (
+        <div key={field.id} className="flex gap-2">
+          <input
+            defaultValue={field.firstName}
+            {...register(`test.${index}.firstName`)}
+            className={inputClass}
+          />
+          <input
+            defaultValue={field.lastName}
+            {...register(`test.${index}.lastName`)}
+            className={inputClass}
+          />
+          <button
+            type="button"
+            onClick={() => remove(index)}
+            className={inputClass}
+          >
+            Remove
+          </button>
+        </div>
+      ))}
+
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={() =>
+            append({
+              firstName: "bill" + renderCountRef.current,
+              lastName: "luo" + renderCountRef.current,
+            })
+          }
+          className={inputClass}
+        >
+          Append
+        </button>
+        <input type="submit" className={inputClass} />
+      </div>
+    </form>
+  );
+}
+
+// 11. 监听单个字段
+type WProps = {
+  name: string;
+  age: number;
+};
+/**
+ * 这样定义就比较通用了，可以指定监听某个字段
+ * @param param0 
+ * @returns 
+ */
+function Child({ control, field, disabled }: { control: Control<WProps>, field: Path<WProps>, disabled: boolean }) {
+  const res = useWatch({
+    control,
+    name: field,
+    disabled,
+    /**
+     * 作用：
+     * - 筛选特定值
+     * - 计算派生值
+     * - 性能优化：避免不必要的重新渲染
+     */
+    compute: (val: string | number) => {
+      if(typeof val === 'string') {
+        return val.length > 3 ? val : '至少4个字符'
+      }else {
+        return val > 18 ? val : '未满 18 周岁'
+      }
+    },
+    defaultValue: '默认值' // 在渲染之前，显示这个默认值，如果没有设置的，会使用 form 的默认值
+  })
+
+  const count = useRef(0)
+  count.current += 1
+  return (
+    <>
+      <p>{count.current}</p>
+      <p>监听到的值：{res}</p>
+    </>
+  )
+}
+
+function WatchSingle() {
+  const { register, handleSubmit, watch, control } = useForm<WProps>({
+    defaultValues: {
+      name: "zhang san",
+      age: 13,
+    },
+  });
+
+  const onSubmit: SubmitHandler<WProps> = (data) => {
+    console.log(`onSubmit: `, data);
+  };
+
+  // 监听单个值 - 仅在监听值变更时，才会触发
+  // console.log(`监听：`, watch("name"));
+  // watch(({name}, p) => {
+  //   console.log(111, name, p);
+  // })
+  // 监听多个值 - 返回一个数组
+  // console.log(`监听：`, watch(['name', 'age']));
+  // 监听整个表
+  // console.log(`监听：`, watch());
+
+  const count = useRef(0)
+  count.current += 1
+
+  const [disabled, setDisabled] = useState(false)
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <h1>渲染次数：{count.current}</h1>
+      <input {...register("name")} className={inputClass} />
+      <Child control={control} field="name" disabled={disabled}/>
+      <input
+        {...register("age", { valueAsNumber: true })}
+        className={inputClass}
+      />
+      <Child control={control} field="age" disabled={disabled}/>
+      <input type="submit" className={inputClass} />
+      <button className={inputClass} onClick={() => setDisabled(!disabled)} >{disabled ? '监听' : '禁用'}</button>
+    </form>
+  );
 }
 
 // 10. 使用 schema 校验
 const formSchema = z.object({
   name: z.string().min(1, "name 不能为空"),
-  age: z.number().min(1, 'age 不能为空')
-})
+  age: z.number().min(1, "age 不能为空"),
+});
 
-type FormSchema = z.infer<typeof formSchema>
+type FormSchema = z.infer<typeof formSchema>;
 
 function WithSchemaValid() {
-  const {register, handleSubmit, formState: { errors }} = useForm<FormSchema>({
-    resolver: zodResolver(formSchema)
-  })
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
+  });
 
   const onSubmit = (data: FormSchema) => {
     console.log(`onSubmit: `, data);
-  }
+  };
   console.log(111, errors);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <input {...register("name")}  className={inputClass}/>
+      <input {...register("name")} className={inputClass} />
       <p>{errors.name?.message}</p>
 
-      <input {...register("age", {valueAsNumber: true})}  className={inputClass}/>
+      <input
+        {...register("age", { valueAsNumber: true })}
+        className={inputClass}
+      />
       <p>{errors.age?.message}</p>
 
-      <input type="submit" className={inputClass}/>
+      <input type="submit" className={inputClass} />
     </form>
-  )
+  );
 }
 
 // 9. 错误处理
 type HProp = {
-  firstName: string 
-  mail: string
-}
+  firstName: string;
+  mail: string;
+};
 function HandleError() {
-  
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<HProp>()
-  const onSubmit: SubmitHandler<HProp> = (data) => console.log(data)
+  } = useForm<HProp>();
+  const onSubmit: SubmitHandler<HProp> = (data) => console.log(data);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -87,27 +266,27 @@ function HandleError() {
       />
       {errors.mail && <p role="alert">{errors.mail.message}</p>}
 
-      <input type="submit" className={inputClass}/>
+      <input type="submit" className={inputClass} />
     </form>
-  )
+  );
 }
 
 // 8. 测试受控 input 的 hooks api
 type FormValues = {
-  FirstName: string
-}
+  FirstName: string;
+};
 
 function Input(props: UseControllerProps<FormValues>) {
-  const { field, fieldState } = useController(props)
+  const { field, fieldState } = useController(props);
   console.log(123, props);
   return (
     <div className="space-y-3">
-      <input {...field} placeholder={props.name} className={inputClass}/>
+      <input {...field} placeholder={props.name} className={inputClass} />
       <p>{fieldState.isTouched && "Touched"}</p>
       <p>{fieldState.isDirty && "Dirty"}</p>
       <p>{fieldState.invalid ? "invalid" : "valid"}</p>
     </div>
-  )
+  );
 }
 
 function ControlledHookAPI() {
@@ -116,17 +295,16 @@ function ControlledHookAPI() {
       FirstName: "",
     },
     mode: "onChange",
-  })
-  const onSubmit = (data: FormValues) => console.log(data)
+  });
+  const onSubmit = (data: FormValues) => console.log(data);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <Input control={control} name="FirstName" rules={{ required: true }} />
-      <input type="submit"  className={inputClass}/>
+      <input type="submit" className={inputClass} />
     </form>
-  )
+  );
 }
-
 
 // 7. 测试多种类型的表单 - 包含输入框，选择框，多选，单选
 function MutipForm() {
